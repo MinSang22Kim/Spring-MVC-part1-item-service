@@ -25,7 +25,7 @@ public class BasicItemController {
     }
 
     @GetMapping("/{itemId}")
-    public String item(@PathVariable("itemId") long itemId, Model model) {
+    public String item(@PathVariable("itemId") Long itemId, Model model) {
         Item item = itemRepository.findById(itemId);
         model.addAttribute("item", item);
         return "basic/item";
@@ -38,7 +38,7 @@ public class BasicItemController {
 
     // @PostMapping("/add")
     public String addFormV1(@RequestParam("itemName") String itemName,
-                            @RequestParam("price") int price,
+                            @RequestParam("price") Integer price,
                             @RequestParam("quantity") Integer quantity,
                             Model model) {
 
@@ -51,26 +51,39 @@ public class BasicItemController {
 
         model.addAttribute("item", item);
 
-        return "/basic/item";
+        return "basic/item";
     }
 
     //@PostMapping("/add")
     public String addFormV2(@ModelAttribute("item") Item item, Model model) {
         itemRepository.save(item);
         // model.addAttribute("item", item); // 자동 추가, 생략 가능
-        return "/basic/item";
+        return "basic/item";
     }
 
     //@PostMapping("/add")
     public String addFormV3(@ModelAttribute("item") Item item) {
         itemRepository.save(item);
-        return "/basic/item";
+        return "basic/item";
     }
 
     @PostMapping("/add")
     public String addFormV4(Item item) {
         itemRepository.save(item);
-        return "/basic/item";
+        return "basic/item";
+    }
+
+    @GetMapping("/{itemId}/edit")
+    public String editForm(@PathVariable("itemId") Long itemId, Model model) {
+        Item item = itemRepository.findById(itemId);
+        model.addAttribute("item", item);
+        return "basic/editForm";
+    }
+
+    @PostMapping("/{itemId}/edit")
+    public String edit(@PathVariable("itemId") Long itemId, @ModelAttribute Item item) {
+        itemRepository.update(itemId, item);
+        return "redirect:/basic/items/{itemId}";
     }
 
     /**
